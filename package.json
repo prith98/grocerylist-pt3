@@ -2,10 +2,10 @@
   "name": "hackreactor-groceries",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "react-dev": "webpack --config ./webpack.config.js --mode development -w",
-    "start": "nodemon backend/server/index.js"
+    "start": "nodemon backend/server/server.js"
   },
   "author": "Prith Jaganathan",
   "license": "ISC",
