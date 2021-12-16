@@ -21,6 +21,7 @@ class GroceryList extends React.Component {
     this.addGrocery = this.addGrocery.bind(this);
     this.refreshForm = this.refreshForm.bind(this);
     this.refreshGroceries = this.refreshGroceries.bind(this);
+    this.deleteGrocery = this.deleteGrocery.bind(this);
   }
 
   // Edit the form by altering the form state
@@ -41,6 +42,8 @@ class GroceryList extends React.Component {
     }
   }
 
+  // Gets the updated list of groceries from DB
+  // and sets groceries state equal to the updated list
   refreshGroceries() {
     axios
       .get('/api/groceries')
@@ -73,6 +76,12 @@ class GroceryList extends React.Component {
       .then(this.refreshForm())
   }
 
+  deleteGrocery(id) {
+    axios
+      .delete(`/api/groceries/${id}`)
+      .then(this.refreshGroceries())
+  }
+
   // Once component is mounted, makes get request to DB, and gets back
   // all groceries in DB and destructures and stores that data
   // in this.state.groceries
@@ -94,6 +103,7 @@ class GroceryList extends React.Component {
          />
         <Groceries
         groceries={this.state.groceries}
+        deleteGrocery={this.deleteGrocery}
         />
       </div>
     )

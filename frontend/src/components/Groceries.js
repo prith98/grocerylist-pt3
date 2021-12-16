@@ -18,10 +18,18 @@ class Groceries extends React.Component {
             <div>{oneItem.quantity}</div>
             <div>{oneItem.best_before}</div>
             <div>{oneItem.purchased}</div>
-            <button
-            name={oneItem.name}
-            >X
-            </button>
+            <div>
+              <button
+              name={oneItem.name}
+              onClick={()=> {
+                this.props.deleteGrocery(oneItem.id)
+              }}
+              > Delete
+              </button>
+              <button>
+                Edit
+              </button>
+            </div>
           </div>
         ))}
       </div>

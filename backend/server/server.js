@@ -35,6 +35,18 @@ app.get('/api/groceries', (req, res) => {
   })
 })
 
+app.delete('/api/groceries/:id', (req, res) => {
+  db.query('DELETE FROM groceries WHERE id = (?)', [req.params.id], function (err, results, fields) {
+    if (err) {
+      throw new Error (err);
+      console.log(err);
+      res.send(err);
+    }
+    console.log('DELETE REQUEST SUCCESSFUL');
+    res.send('DELETE REQUEST SUCCESSFUL');
+  })
+})
+
 app.listen(PORT, () => {
   console.log(`I'm listening on port: ${PORT}`)
 })
