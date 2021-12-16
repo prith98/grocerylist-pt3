@@ -18,8 +18,12 @@ class GroceryList extends React.Component {
     }
     this.editForm = this.editForm.bind(this);
     this.addGrocery = this.addGrocery.bind(this);
+    this.refreshForm = this.refreshForm.bind(this);
   }
 
+  // Edit the form by altering the form state
+  // https://stackoverflow.com/questions/43638938/updating-an-object-with-setstate-in-react
+  // Used @AlbertoPiras & @ravibagul91's solutions
   editForm(event) {
     if (event.target.name !== 'purchased') {
       let inputName = event.target.name;
@@ -35,11 +39,39 @@ class GroceryList extends React.Component {
     }
   }
 
+  // Is called after submitting the form to DB, resets form to a blank state
+  refreshForm() {
+    this.setState({
+      form: {
+        name: '',
+        quantity: '',
+        best_before: '',
+        purchased: false
+      }
+    })
+  }
+
+  // Invoked when Add Grocery button is clicked, sends grocery object to database
+  // and refreshes form afterwards to initial state
   addGrocery(event) {
     event.preventDefault();
     console.log(this.state.form)
     axios
       .post('/api/groceries', this.state.form)
+      .then(this.refreshForm())
+  }
+
+  // Once component is mounted, makes get request to DB, and gets back
+  // all groceries in DB and destructures and stores that data
+  // in this.state.groceries
+  componentDidMount() {
+    axios
+      .get('/api/groceries')
+      .then(({data}) => {
+        this.setState({
+          groceries: data
+        })
+      })
   }
 
   render() {
