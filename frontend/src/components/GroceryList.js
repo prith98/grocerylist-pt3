@@ -9,19 +9,39 @@ class GroceryList extends React.Component {
     super(props);
     this.state = {
       form: {
+        id: '',
         name: '',
         quantity: '',
         best_before: '',
         purchased: false
       },
       groceries: [],
-      add_edit: 'Add Grocery'
+      add_edit: 'Add Grocery',
+      groceryToEdit: {}
     }
     this.editForm = this.editForm.bind(this);
     this.addGrocery = this.addGrocery.bind(this);
     this.refreshForm = this.refreshForm.bind(this);
     this.refreshGroceries = this.refreshGroceries.bind(this);
     this.deleteGrocery = this.deleteGrocery.bind(this);
+    this.editGrocery = this.editGrocery.bind(this);
+    this.editGroceryDB = this.editGroceryDB.bind(this);
+  }
+
+
+  // Allows us to change state values in response
+  // to changes from prop values, in this case
+  // it's changes to form
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    this.setState({
+      form: {
+        id: nextProps.groceryToEdit.id || '',
+        name: nextProps.groceryToEdit.name || '',
+        quantity: nextProps.groceryToEdit.quantity || '',
+        best_before: nextProps.groceryToEdit.best_before.slice || '',
+        purchased: nextProps.groceryToEdit.purchased || false
+      }
+    })
   }
 
   // Edit the form by altering the form state
@@ -58,29 +78,51 @@ class GroceryList extends React.Component {
   refreshForm() {
     this.setState({
       form: {
+        id: '',
         name: '',
         quantity: '',
         best_before: '',
         purchased: false
-      }
+      },
+      groceryToEdit: {}
     })
   }
 
   // Invoked when Add Grocery button is clicked, sends grocery object to database
   // and refreshes form afterwards to initial state
   addGrocery(event) {
-    event.preventDefault();
     axios
       .post('/api/groceries', this.state.form)
       .then(this.refreshGroceries())
       .then(this.refreshForm())
   }
 
+  // Sends a delete request to delete a grocery by its ID tag from the DB
   deleteGrocery(id) {
     axios
       .delete(`/api/groceries/${id}`)
       .then(this.refreshGroceries())
   }
+
+  // Puts selected grocery info back into the form to
+  // prepare for a PUT request to update info in the DB via ID
+  editGrocery(grocery) {
+    grocery.best_before = grocery.best_before.slice(0, 10)
+    this.setState({
+      form: grocery,
+      groceryToEdit: grocery
+    })
+  }
+
+  // Submits PUT Request to DB to edit grocery at ID
+  // and then re-renders updated list of groceries
+  editGroceryDB(event) {
+    axios
+      .put('/api/groceries', this.state.groceryToEdit)
+      .then(this.refreshForm())
+
+  }
+
 
   // Once component is mounted, makes get request to DB, and gets back
   // all groceries in DB and destructures and stores that data
@@ -100,10 +142,13 @@ class GroceryList extends React.Component {
          editForm={this.editForm}
          add_edit={this.state.add_edit}
          addGrocery={this.addGrocery}
+         editGroceryDB={this.editGroceryDB}
          />
         <Groceries
         groceries={this.state.groceries}
         deleteGrocery={this.deleteGrocery}
+        editGrocery={this.editGrocery}
+        editGroceryDB={this.editGroceryDB}
         />
       </div>
     )

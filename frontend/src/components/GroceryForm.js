@@ -47,8 +47,16 @@ class GroceryForm extends React.Component {
           />
           <button
           type="button"
+          id="add_edit"
           onClick={this.props.addGrocery}>
-            {this.props.add_edit}
+            Add Grocery
+          </button>
+          <button
+          type="button"
+          id="edit"
+          onClick={this.props.editGroceryDB}
+          >
+            Edit Grocery
           </button>
         </label>
       </form>

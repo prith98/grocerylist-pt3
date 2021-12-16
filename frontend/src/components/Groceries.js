@@ -26,8 +26,12 @@ class Groceries extends React.Component {
               }}
               > Delete
               </button>
-              <button>
-                Edit
+              <button
+              type="button"
+              onClick={() => {
+                this.props.editGrocery(oneItem)
+              }}
+              > Edit
               </button>
             </div>
           </div>
