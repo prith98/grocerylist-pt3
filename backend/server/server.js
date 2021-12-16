@@ -47,6 +47,21 @@ app.delete('/api/groceries/:id', (req, res) => {
   })
 })
 
+app.put('/api/groceries', (req, res) => {
+  const {id, name, quantity, best_before, purchased} = req.body;
+  db.query(
+  'UPDATE groceries SET name = (?), quantity = (?), best_before = (?), purchased = (?) WHERE id = (?)',
+  [name, quantity, best_before, purchased, id],
+  (err, data) => {
+    if (err) {
+      throw new Error (err)
+      console.log(err)
+      res.send(err)
+    }
+    res.send('UPDATE SUCCESSFUL');
+  })
+})
+
 app.listen(PORT, () => {
   console.log(`I'm listening on port: ${PORT}`)
 })
