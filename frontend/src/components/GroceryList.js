@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import GroceryForm from '/frontend/src/components/GroceryForm.js';
+import Groceries from '/frontend/src/components/Groceries.js';
 
 class GroceryList extends React.Component {
 
@@ -19,6 +20,7 @@ class GroceryList extends React.Component {
     this.editForm = this.editForm.bind(this);
     this.addGrocery = this.addGrocery.bind(this);
     this.refreshForm = this.refreshForm.bind(this);
+    this.refreshGroceries = this.refreshGroceries.bind(this);
   }
 
   // Edit the form by altering the form state
@@ -39,6 +41,16 @@ class GroceryList extends React.Component {
     }
   }
 
+  refreshGroceries() {
+    axios
+      .get('/api/groceries')
+      .then(({data}) => {
+        this.setState({
+          groceries: data
+        })
+      })
+  }
+
   // Is called after submitting the form to DB, resets form to a blank state
   refreshForm() {
     this.setState({
@@ -55,9 +67,9 @@ class GroceryList extends React.Component {
   // and refreshes form afterwards to initial state
   addGrocery(event) {
     event.preventDefault();
-    console.log(this.state.form)
     axios
       .post('/api/groceries', this.state.form)
+      .then(this.refreshGroceries())
       .then(this.refreshForm())
   }
 
@@ -65,13 +77,7 @@ class GroceryList extends React.Component {
   // all groceries in DB and destructures and stores that data
   // in this.state.groceries
   componentDidMount() {
-    axios
-      .get('/api/groceries')
-      .then(({data}) => {
-        this.setState({
-          groceries: data
-        })
-      })
+    this.refreshGroceries();
   }
 
   render() {
@@ -86,6 +92,9 @@ class GroceryList extends React.Component {
          add_edit={this.state.add_edit}
          addGrocery={this.addGrocery}
          />
+        <Groceries
+        groceries={this.state.groceries}
+        />
       </div>
     )
 

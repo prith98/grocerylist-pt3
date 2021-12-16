@@ -24,14 +24,14 @@ app.post('/api/groceries', (req, res) => {
 })
 
 app.get('/api/groceries', (req, res) => {
-  db.query('SELECT * from groceries', (err, groceries) => {
+  db.query('SELECT * from groceries', (err, data) => {
     if (err) {
       throw new Error(err);
       console.log(err);
       res.send(err);
     }
     console.log('GET REQUEST SUCCESSFUL');
-    res.send(groceries);
+    res.send(data);
   })
 })
 
